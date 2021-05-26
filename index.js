@@ -1,7 +1,9 @@
 const express = require('express');
 const port = 8000;
 const app = express();
+const expressLayouts = require('express-ejs-layouts');
 
+app.use(expressLayouts);
 app.use('/', require('./routes'));
 
 //set up the view engine
