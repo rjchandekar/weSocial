@@ -2,17 +2,27 @@ const User = require('../models/user')
 
 module.exports.profile = function(req,res){
     return res.render('user_profile',{
-        title: 'User Profile'
+        title: 'WeSocial | User Profile'
     })
 }
 
+//render the sign up page
 module.exports.signUp = function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
     return res.render('user_sign_up',{
         title: 'WeSocial | Sign Up'
     })
 } 
 
+//render the sign in page
 module.exports.signIn = function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+
     return res.render('user_sign_in',{
         title: 'WeSocial | Sign In'
     })
@@ -20,7 +30,7 @@ module.exports.signIn = function(req,res){
 
 //get the sign up data
 module.exports.create = function(req, res){
-    console.log(req.body);
+    // console.log(req.body);
     if(req.body.password != req.body.confirm_password){
         return res.redirect('back');
     }
@@ -46,5 +56,5 @@ module.exports.create = function(req, res){
 
 //sign in and create a session for user
 module.exports.createSession = function(req,res){
-    //Todo later
+    return res.redirect('/');
 } 
