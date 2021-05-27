@@ -1,9 +1,19 @@
 const User = require('../models/user')
 
 module.exports.profile = function(req,res){
-    return res.render('user_profile',{
-        title: 'User Profile'
-    })
+    if(req.cookies.user_id){
+        User.findById(req.cookies.user_id, function(err,user){
+            if(user){
+                return res.render('user_profile', {
+                    title: "User Profile",
+                    user: user
+                })
+            }
+            return res.redirect('/users/sign-in')
+        })
+    }else{
+        return res.redirect('/users/sign-in');
+    }
 }
 
 module.exports.signUp = function(req,res){
@@ -46,5 +56,30 @@ module.exports.create = function(req, res){
 
 //sign in and create a session for user
 module.exports.createSession = function(req,res){
-    //Todo later
+    //find the user
+    User.findOne({email: req.body.email}, function(err,user){
+        if(err){
+            console.log('Error in finding the User in signing up');
+            return;
+        } 
+        //handle if user is found
+        if(user){
+            //handle mismatching of password 
+            if(user.password != req.body.password){
+                return res.redirect('back');
+            }
+
+            //handle session creation
+            res.cookie('user_id', user._id);
+            res.redirect('/users/profile');
+        }else{
+            //handle if use is not found
+            return res.redirect('back');
+        }
+    })
+    
+
+    
+
+    //handel if user is not found
 } 
