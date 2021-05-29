@@ -46,8 +46,8 @@ module.exports.create = function(req, res){
                     console.log('Error in signing up the User');
                     return;
                 }
+                return res.redirect('/users/sign-in');
             });
-            return res.redirect('/users/sign-in');
         }else{
             return res.redirect('back');
         }
@@ -55,6 +55,11 @@ module.exports.create = function(req, res){
 }
 
 //sign in and create a session for user
-module.exports.createSession = function(req,res){
+module.exports.createSession = function(req, res){
     return res.redirect('/');
 } 
+
+module.exports.destroySession = function(req, res){
+    req.logout();
+    return res.redirect('/');
+}
