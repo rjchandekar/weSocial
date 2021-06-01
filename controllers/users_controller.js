@@ -1,9 +1,23 @@
 const User = require('../models/user')
 
 module.exports.profile = function(req,res){
-    return res.render('user_profile',{
-        title: 'WeSocial | User Profile'
+    User.findById(req.params.id, function(err, user){
+        return res.render('user_profile',{
+            title: 'WeSocial | User Profile',
+            profile_user: user
+        })
     })
+    
+}
+
+module.exports.update = function(req, res){
+    if(req.user.id == req.params.id){
+        User.findByIdAndUpdate(req.params.id, req.body, function(err){
+            return res.redirect('back');
+        })
+    }else{
+        return res.status(401).send('Unauthorized');
+    }
 }
 
 //render the sign up page
@@ -41,7 +55,7 @@ module.exports.create = function(req, res){
         if(!user){
             User.create(req.body, function(err,user){
                 if(err){console.log('Error in signing up the User');return;}
-                
+
                 return res.redirect('/users/sign-in');
             });
         }else{
